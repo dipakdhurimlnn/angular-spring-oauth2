@@ -5,17 +5,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -46,44 +45,49 @@ public class SecurityConfig {
 
 		CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
 		requestHandler.setCsrfRequestAttributeName("_csrf");
-		http.cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
-			@Override
-			public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-				CorsConfiguration config = new CorsConfiguration();
-				config.setAllowCredentials(true);
-				config.addAllowedOriginPattern("*");
-				config.addAllowedHeader("*");
-				config.addAllowedMethod("*");
-				config.addExposedHeader("Authorization");
-				config.setMaxAge(366000L);
-				return config;
+		http.securityContext((securityContext) -> securityContext.requireExplicitSave(true))
+				.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
+					@Override
+					public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+						CorsConfiguration config = new CorsConfiguration();
+						config.setAllowCredentials(true);
+						config.addAllowedOriginPattern("*");
+						config.addAllowedHeader("*");
+						config.addAllowedMethod("*");
+						config.addExposedHeader("Authorization");
+						config.setMaxAge(366000L);
+						return config;
 
-			}
-		})).csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler)
-				.ignoringRequestMatchers("/oauth2/**", "/contact", "/register")
-				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+					}
+				}))
+				.csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler)
+						.ignoringRequestMatchers("/oauth2/**", "/contact", "/register")
+						.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
 				.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+				.addFilterAfter(new CustomLoginFilter(userDetailsService), CsrfFilter.class)
 				.exceptionHandling((exceptions) -> exceptions.defaultAuthenticationEntryPointFor(
 						new LoginUrlAuthenticationEntryPoint("/login"),
 						new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
+
 				.oauth2ResourceServer((resourceServer) -> resourceServer.jwt(Customizer.withDefaults()))
-				.addFilterAfter(new CustomLoginFilter(userDetailsService), CsrfFilter.class);
+				.formLogin(Customizer.withDefaults()).httpBasic(Customizer.withDefaults());
 
 		return http.build();
 	}
 
 	@Bean
 	@Order(2)
-	SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests((authorize) -> authorize
-				.requestMatchers("/authcode", "/test/unprotected", "/v3/api-docs/**", "/swagger-ui/**",
-						"/swagger-ui.html")
-				.permitAll().requestMatchers(HttpMethod.OPTIONS, "/**").permitAll().anyRequest().authenticated())
-				.securityContext((securityContext) -> securityContext.requireExplicitSave(true))
+	public SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
+		// chain would be invoked only for paths that start with /api/
+		http.securityMatcher("/api/**")
+				.authorizeHttpRequests((authorize) -> authorize.requestMatchers("/api/test/unprotected").permitAll()
+						.anyRequest().authenticated())
+				// Ignoring session cookie
 				.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.formLogin(Customizer.withDefaults()).httpBasic(Customizer.withDefaults())
-
-				.addFilterAfter(new CustomLoginFilter(userDetailsService), CsrfFilter.class);
+				.oauth2ResourceServer((resourceServer) -> resourceServer.jwt(Customizer.withDefaults()))
+				// disabling csrf tokens for the sake of the example
+				.csrf(AbstractHttpConfigurer::disable);
 
 		return http.build();
 	}
