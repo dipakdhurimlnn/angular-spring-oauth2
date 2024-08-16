@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: authorization-server-demo
+  datasource:
+    url: jdbc:mysql://localhost:3306/eazybank
+    username: root
+    password: my-secret-pw
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        
+springdoc:
+  enable-spring-security: true
+  show-login-endpoint: true
+  show-oauth2-endpoints: true
+  
+#logginglevel.org.springframework.security=DEBUG
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE
+  pattern:
+    console: "%file - %m%n"
+
+        
+        

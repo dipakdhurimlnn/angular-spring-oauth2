@@ -1,0 +1,42 @@
+package com.github.vkravchenk0.demo.repositoryImpl;
+
+import java.util.HashSet;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.github.vkravchenk0.demo.entity.Customer;
+import com.github.vkravchenk0.demo.repository.CustomerRepository;
+
+@Service("DatabaseUserDetailsServiceImpl")
+class DatabaseUserDetailsServiceImpl implements UserDetailsService {
+
+	@Autowired
+	private CustomerRepository userRepository;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		Customer user = userRepository.findByEmail(username);
+		if (user == null) {
+			throw new UsernameNotFoundException("User not found");
+		}
+		return org.springframework.security.core.userdetails.User.withUsername(user.getEmail()).password(user.getPwd())
+				.authorities(user.getAuthorities()).build();
+	}
+
+	public void addUser(String username, String password, String... roles) {
+		Customer user = new Customer();
+		user.setName(username);
+		user.setPwd(passwordEncoder.encode(password));
+		user.setAuthorities(new HashSet(List.of(roles)));
+		userRepository.save(user);
+	}
+}
