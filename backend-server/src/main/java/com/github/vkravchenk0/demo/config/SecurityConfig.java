@@ -55,8 +55,8 @@ public class SecurityConfig {
 		// chain would be invoked only for paths that start with /api/
 		http.securityMatcher("/api/**")
 				.authorizeHttpRequests((authorize) -> authorize
-						.requestMatchers("/api/test/unprotected", "/api/notices", "/api/contact").permitAll()
-						.anyRequest().authenticated())
+						.requestMatchers("/api/test/unprotected", "/api/login", "/api/notices", "/api/contact")
+						.permitAll().anyRequest().authenticated())
 				// Ignoring session cookie
 				.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.oauth2ResourceServer((resourceServer) -> resourceServer.jwt(Customizer.withDefaults()))
