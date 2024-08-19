@@ -1,7 +1,5 @@
 package com.github.vkravchenk0.demo.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -9,28 +7,21 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-
-import com.github.vkravchenk0.demo.filter.CustomLoginFilter;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-	@Autowired
-	@Qualifier("DatabaseUserDetailsServiceImpl")
-	private UserDetailsService userDetailsService;
 
 	@Bean
 	@Order(1)
@@ -60,14 +51,31 @@ public class SecurityConfig {
 
 	@Bean
 	@Order(2)
-	SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
+		// chain would be invoked only for paths that start with /api/
 		http.securityMatcher("/api/**")
-				.authorizeHttpRequests((authorize) -> authorize.requestMatchers("/test/unprotected").permitAll()
+				.authorizeHttpRequests((authorize) -> authorize.requestMatchers("/api/test/unprotected").permitAll()
 						.anyRequest().authenticated())
-				.securityContext((securityContext) -> securityContext.requireExplicitSave(true))
+				// Ignoring session cookie
 				.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.formLogin(Customizer.withDefaults()).httpBasic(Customizer.withDefaults())
-				.oauth2ResourceServer((resourceServer) -> resourceServer.jwt(Customizer.withDefaults()));
+				.oauth2ResourceServer((resourceServer) -> resourceServer.jwt(Customizer.withDefaults()))
+				// disabling csrf tokens for the sake of the example
+				.csrf(AbstractHttpConfigurer::disable);
+
+		return http.build();
+	}
+
+	@Bean
+	@Order(3)
+	public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+		http.authorizeHttpRequests((authorize) -> authorize.requestMatchers("/test/unprotected",
+				// swagger ui paths
+				"/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll().anyRequest().authenticated())
+				// Form login handles the redirect to the login page from the
+				// authorization server filter chain
+				.formLogin(Customizer.withDefaults())
+				// disabling csrf tokens for the sake of the example
+				.csrf(AbstractHttpConfigurer::disable);
 
 		return http.build();
 	}
