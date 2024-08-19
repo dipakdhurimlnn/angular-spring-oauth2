@@ -54,7 +54,8 @@ public class SecurityConfig {
 	public SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
 		// chain would be invoked only for paths that start with /api/
 		http.securityMatcher("/api/**")
-				.authorizeHttpRequests((authorize) -> authorize.requestMatchers("/api/test/unprotected").permitAll()
+				.authorizeHttpRequests((authorize) -> authorize
+						.requestMatchers("/api/test/unprotected", "/api/notices", "/api/contact").permitAll()
 						.anyRequest().authenticated())
 				// Ignoring session cookie
 				.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

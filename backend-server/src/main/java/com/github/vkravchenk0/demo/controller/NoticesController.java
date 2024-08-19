@@ -19,10 +19,10 @@ public class NoticesController {
 	private NoticeRepository noticeRepository;
 
 	@GetMapping("/api/notices")
-	public ResponseEntity<List<Notice>> getNotices() {
+	public List<Notice> getNotices() {
 		List<Notice> notices = noticeRepository.findAllActiveNotices();
 		if (notices != null) {
-			return ResponseEntity.ok().cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS)).body(notices);
+			return notices;
 		} else {
 			return null;
 		}

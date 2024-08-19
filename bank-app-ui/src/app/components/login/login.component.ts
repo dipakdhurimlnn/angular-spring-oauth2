@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.validateUser();
+        // this.validateUser();
         console.log("page loaded")
         // this.route.queryParams.subscribe(params => {
         //     console.log('Query Params:', params);

@@ -7,5 +7,6 @@ export const AppConstants = {
     CARDS_API_URL: "/api/myCards",
     NOTICES_API_URL: "/api/notices",
     AUTHORIZE_URL: "/oauth2/authorize",
-    TOKEN_URL: "/oauth2/token"
+    TOKEN_URL: "/oauth2/token",
+    LOGOUT_URL: "/oauth2/revoke"
 }
