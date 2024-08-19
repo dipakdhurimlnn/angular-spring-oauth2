@@ -19,8 +19,7 @@ const routes: Routes = [
     {path: 'login', component: LoginComponent},
     {path: 'contact', component: ContactComponent},
     {path: 'notices', component: NoticesComponent},
-    // {path: 'dashboard', component: DashboardComponent, canActivate: [AuthActivateRouteGuard], data: {}},
-    {path: 'dashboard', component: DashboardComponent, data: {}},
+    {path: 'dashboard', component: DashboardComponent, canActivate: [AuthActivateRouteGuard], data: {}},
     {path: 'logout', component: LogoutComponent},
     {path: 'myAccount', component: AccountComponent, canActivate: [AuthActivateRouteGuard], data: {roles: ['USER']}},
     {

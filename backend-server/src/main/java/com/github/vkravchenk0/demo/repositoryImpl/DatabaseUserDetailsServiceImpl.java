@@ -24,12 +24,12 @@ class DatabaseUserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Customer user = userRepository.findByEmail(username);
+		List<Customer> user = userRepository.findByEmail(username);
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found");
 		}
-		return org.springframework.security.core.userdetails.User.withUsername(user.getEmail()).password(user.getPwd())
-				.authorities(user.getAuthorities()).build();
+		return org.springframework.security.core.userdetails.User.withUsername(user.get(0).getEmail())
+				.password(user.get(0).getPwd()).authorities(user.get(0).getAuthorities()).build();
 	}
 
 	public void addUser(String username, String password, String... roles) {

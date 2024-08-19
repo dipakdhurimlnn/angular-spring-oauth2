@@ -22,7 +22,7 @@
         <div class="form-group">
           <div class="wrap-input100 validate-input" data-validate="Please enter password">
             <input class="input100" type="password" name="password" placeholder="Password" id="password" required
-            [(ngModel)]="model.password" #password="ngModel" minlength="5">
+                   [(ngModel)]="model.pwd" #password="ngModel" minlength="5">
             <span class="focus-input100"></span>
           </div>
           <span class="text-danger" *ngIf="(password.touched || loginForm.submitted) &&
