@@ -99,4 +99,12 @@ public class LoginController {
 
 	}
 
+	@PostMapping("/api/logout")
+	public ResponseEntity<String> logoutUser(@RequestBody Customer customer) {
+		ResponseEntity response = null;
+		SecurityContextHolder.getContext().setAuthentication(null);
+		SecurityContextHolder.clearContext();
+		return response = ResponseEntity.status(HttpStatus.OK).body("Success");
+	}
+
 }

@@ -8,6 +8,6 @@ export const AppConstants = {
     NOTICES_API_URL: "/api/notices",
     AUTHORIZE_URL: "/oauth2/authorize",
     TOKEN_URL: "/oauth2/token",
-    LOGOUT_URL: "/oauth2/revoke",
+    LOGOUT_URL: "/api/logout",
     LOGIN_URL: "/api/login"
 }
