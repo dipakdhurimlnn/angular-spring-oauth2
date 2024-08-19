@@ -22,9 +22,7 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log("page loaded")
         this.route.queryParams.subscribe(params => {
-            console.log('Query Params:', params);
             if (params['code']) {
 
                 const grant_type = "authorization_code";
@@ -38,7 +36,6 @@ export class LoginComponent implements OnInit {
                 this.http.post<TokenOb>(environment.rooturl + AppConstants.TOKEN_URL, payloadOb).subscribe(
                     res => {
                         if (res) {
-                            console.log(res.access_token);
                             if (res.access_token) {
                                 window.sessionStorage.setItem("accessToken", res['access_token']);
                                 this.router.navigate(['/dashboard']);
