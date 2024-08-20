@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
         this.loginService.validateLoginDetails(this.model).subscribe(res => {
             if (res) {
                 res.authStatus = "AUTH";
-                window.sessionStorage.setItem("userdetails", JSON.stringify(res));
+                // window.sessionStorage.setItem("userdetails", JSON.stringify(res));
                 const response_type = "code";
                 const client_id = "oidc-client"
                 const code_challenge = "tpv22FEqJbXNrge_mtAYpNP2gTTm7WF8cPrVI8gpNBY";

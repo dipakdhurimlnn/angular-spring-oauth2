@@ -28,8 +28,8 @@ export class LogoutComponent implements OnInit {
                 console.log("logout success");
             }
         )
-        window.sessionStorage.setItem("accessToken", "");
-        window.sessionStorage.setItem("userdetails", "");
+        window.sessionStorage.removeItem("accessToken");
+        window.sessionStorage.removeItem("userdetails");
         this.router.navigate(['/login']);
     }
 

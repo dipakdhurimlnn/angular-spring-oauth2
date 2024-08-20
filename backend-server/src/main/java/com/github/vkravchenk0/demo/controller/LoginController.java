@@ -15,6 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.vkravchenk0.demo.entity.Customer;
 import com.github.vkravchenk0.demo.repository.CustomerRepository;
 import com.github.vkravchenk0.demo.rest.model.RestCustomer;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 public class LoginController {
@@ -33,7 +38,7 @@ public class LoginController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-//	private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
+	private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
 	private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
 			.getContextHolderStrategy();
@@ -47,7 +52,7 @@ public class LoginController {
 	@PostMapping("/api/register")
 	public ResponseEntity<String> registerUser(@RequestBody Customer customer) {
 		Customer savedCustomer = null;
-		ResponseEntity response = null;
+		ResponseEntity<String> response = null;
 		try {
 			String hashPwd = passwordEncoder.encode(customer.getPwd());
 			customer.setPwd(hashPwd);
@@ -65,7 +70,8 @@ public class LoginController {
 	}
 
 	@PostMapping("/api/login")
-	public ResponseEntity<RestCustomer> loginUser(@RequestBody Customer customer) {
+	public ResponseEntity<RestCustomer> loginUser(@RequestBody Customer customer, HttpServletRequest httpRequest,
+			HttpServletResponse httpResponse) {
 		ResponseEntity response = null;
 		if (customer.getEmail().toLowerCase().contains("test")) {
 			return response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("login-failed");
@@ -84,6 +90,7 @@ public class LoginController {
 				userDetails.getAuthorities());
 		SecurityContext context = securityContextHolderStrategy.createEmptyContext();
 		context.setAuthentication(authentication);
+		securityContextRepository.saveContext(context, httpRequest, httpResponse);
 		securityContextHolderStrategy.setContext(context);
 		return response = ResponseEntity.status(HttpStatus.OK).body(new RestCustomer(customers.get(0)));
 	}

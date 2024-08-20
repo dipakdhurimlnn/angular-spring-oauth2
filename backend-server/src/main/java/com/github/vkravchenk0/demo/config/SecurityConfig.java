@@ -68,13 +68,13 @@ public class SecurityConfig {
 
 	@Bean
 	@Order(3)
-	public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests((authorize) -> authorize.requestMatchers("/test/unprotected",
 				// swagger ui paths
 				"/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll().anyRequest().authenticated())
 				// Form login handles the redirect to the login page from the
 				// authorization server filter chain
-				.formLogin(Customizer.withDefaults())
+				.formLogin(Customizer.withDefaults()).httpBasic(Customizer.withDefaults())
 				// disabling csrf tokens for the sake of the example
 				.csrf(AbstractHttpConfigurer::disable);
 
