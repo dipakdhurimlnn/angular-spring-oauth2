@@ -48,27 +48,28 @@ export class LoginComponent implements OnInit {
     }
 
     validateUser(loginForm?: NgForm) {
-        this.loginService.validateLoginDetails(this.model).subscribe(res => {
-            if (res) {
-                res.authStatus = "AUTH";
-                // window.sessionStorage.setItem("userdetails", JSON.stringify(res));
-                const response_type = "code";
-                const client_id = "oidc-client"
-                const code_challenge = "tpv22FEqJbXNrge_mtAYpNP2gTTm7WF8cPrVI8gpNBY";
-                const code_challenge_method = "S256"
-                const authObject = {
-                    response_type: response_type,
-                    client_id: client_id,
-                    code_challenge: code_challenge,
-                    code_challenge_method: code_challenge_method
-                }
-                const authUrl = `http://localhost:8080/oauth2/authorize?response_type=code&client_id=${client_id}&code_challenge=${code_challenge}&code_challenge_method=S256`;
-                window.location.href = authUrl;
-            }
-        }, err => {
-            window.alert("Invalid username or password!")
-        });
-
+        // this.loginService.validateLoginDetails(this.model).subscribe(res => {
+        //     if (res) {
+        //         res.authStatus = "AUTH";
+        // window.sessionStorage.setItem("userdetails", JSON.stringify(res));
+        const response_type = "code";
+        const client_id = "oidc-client"
+        const code_challenge = "tpv22FEqJbXNrge_mtAYpNP2gTTm7WF8cPrVI8gpNBY";
+        const code_challenge_method = "S256"
+        const authObject = {
+            response_type: response_type,
+            client_id: client_id,
+            code_challenge: code_challenge,
+            code_challenge_method: code_challenge_method
+        }
+        const authUrl = `http://localhost:8080/oauth2/authorize?response_type=code&client_id=${client_id}&code_challenge=${code_challenge}&code_challenge_method=S256`;
+        window.location.href = authUrl;
     }
+
+    // }, err => {
+    //     window.alert("Invalid username or password!")
+    // });
+
+// }
 
 }

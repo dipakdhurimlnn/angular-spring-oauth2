@@ -23,11 +23,19 @@ export class LogoutComponent implements OnInit {
     ngOnInit(): void {
 
         const payloadOb = JSON.parse(window.sessionStorage.getItem("userdetails") || "");
-        this.http.post<TokenOb>(environment.rooturl + AppConstants.LOGOUT_URL, payloadOb).subscribe(
+        this.http.get(environment.rooturl + AppConstants.LOGOUT_URL).subscribe(
             res => {
                 console.log("logout success");
             }
         )
+        // const payloadOb = new FormData();
+        // payloadOb.append("token", window.sessionStorage.getItem("accessToken") || "");
+        // payloadOb.append("token_type_hint", "access_token");
+        // this.http.post<TokenOb>(environment.rooturl + AppConstants.TOKEN_REVOKE_URL, payloadOb).subscribe(
+        //     res => {
+        //         console.log("logout success");
+        //     }
+        // )
         window.sessionStorage.removeItem("accessToken");
         window.sessionStorage.removeItem("userdetails");
         this.router.navigate(['/login']);

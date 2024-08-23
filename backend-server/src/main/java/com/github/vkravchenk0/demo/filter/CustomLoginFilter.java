@@ -25,8 +25,6 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-
 public class CustomLoginFilter implements Filter {
 
 	private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();

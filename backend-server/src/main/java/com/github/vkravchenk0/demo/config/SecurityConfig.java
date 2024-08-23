@@ -1,5 +1,7 @@
 package com.github.vkravchenk0.demo.config;
 
+import java.io.IOException;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -9,19 +11,31 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+	
+	
+	private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
+	private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
+			.getContextHolderStrategy();
 
 	@Bean
 	@Order(1)
@@ -76,7 +90,32 @@ public class SecurityConfig {
 				// authorization server filter chain
 				.formLogin(Customizer.withDefaults()).httpBasic(Customizer.withDefaults())
 				// disabling csrf tokens for the sake of the example
-				.csrf(AbstractHttpConfigurer::disable);
+				.logout((logout) -> logout.addLogoutHandler(new LogoutHandler() {
+
+					@Override
+					public void logout(HttpServletRequest request, HttpServletResponse response,
+							Authentication authentication) {
+						// Invalidate the session if it exists
+						System.err.println("log out is called");
+						if (request.getSession(false) != null) {
+							request.getSession().invalidate();
+						}
+						authentication.setAuthenticated(false);
+
+						SecurityContextHolder.clearContext();
+						if(securityContextRepository.containsContext(request)) {
+							securityContextRepository.saveContext(null, request, response);
+						}
+						securityContextHolderStrategy.setContext(securityContextHolderStrategy.createEmptyContext());
+						response.setStatus(HttpServletResponse.SC_ACCEPTED);
+						try {
+							response.sendRedirect("/login?logout");
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}).logoutSuccessUrl("http://localhost:4200/login")).csrf(AbstractHttpConfigurer::disable);
 
 		return http.build();
 	}

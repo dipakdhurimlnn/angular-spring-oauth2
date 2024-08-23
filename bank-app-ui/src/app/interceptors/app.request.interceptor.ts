@@ -17,7 +17,7 @@ export class XhrInterceptor implements HttpInterceptor {
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler) {
-        if (req.url.indexOf("oauth2/") < 0) {
+        if (req.url.indexOf("oauth2/") < 0 && req.url.indexOf("logout") < 0) {
             let httpHeaders = new HttpHeaders();
             if (sessionStorage.getItem('userdetails')) {
                 this.user = JSON.parse(sessionStorage.getItem('userdetails')!);

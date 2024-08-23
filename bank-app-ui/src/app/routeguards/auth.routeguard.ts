@@ -4,32 +4,44 @@ import {User} from '../model/user.model';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {AppConstants} from "../constants/app.constants";
-import {getCookie} from "typescript-cookie";
+import {map, Observable, of} from "rxjs";
+import {catchError} from "rxjs/operators";
 
 @Injectable()
 export class AuthActivateRouteGuard implements CanActivate {
-    user = new User();
+    user?: User;
 
     constructor(private router: Router, private http: HttpClient) {
 
     }
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
         if (sessionStorage.getItem('userdetails')) {
             this.user = JSON.parse(sessionStorage.getItem('userdetails')!);
+            return of(true);
         } else if (sessionStorage.getItem('accessToken')) {
-            this.http.get<User>(environment.rooturl + AppConstants.CURRENT_USER_API_URL).subscribe(res => {
+            return this.getCurrentUser();
+        } else {
+            return of(false);
+        }
+    }
+
+    getCurrentUser(): Observable<boolean> {
+        return this.http.get<User>(`${environment.rooturl}${AppConstants.CURRENT_USER_API_URL}`).pipe(
+            map(res => {
                 if (res) {
                     res.authStatus = 'AUTH';
                     sessionStorage.setItem('userdetails', JSON.stringify(res));
-                    // let xsrf = getCookie('XSRF-TOKEN')!;
-                    // window.sessionStorage.setItem("XSRF-TOKEN", xsrf);
+                    return true;
                 } else {
                     this.router.navigate(['login']);
+                    return false;
                 }
+            }),
+            catchError(error => {
+                this.router.navigate(['login']);
+                return of(false);
             })
-        }
-        return this.user ? true : false;
+        );
     }
-
 }

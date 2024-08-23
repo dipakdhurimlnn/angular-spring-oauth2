@@ -2,10 +2,12 @@ spring:
   application:
     name: authorization-server-demo
   datasource:
-    url: jdbc:mysql://localhost:3306/eazybank
-    username: root
-    password: my-secret-pw
+    url: jdbc:postgresql://localhost:5432/eazybank
+    username: postgres
+    password: saral001
+    driver-class-name : org.postgresql.Driver
   jpa:
+    database-platform : org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
     properties:
       hibernate:

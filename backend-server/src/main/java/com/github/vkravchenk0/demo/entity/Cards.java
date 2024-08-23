@@ -1,6 +1,6 @@
 package com.github.vkravchenk0.demo.entity;
 
-import java.sql.Date;
+import java.util.Date;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -10,8 +10,8 @@ import org.hibernate.annotations.GenericGenerator;
 public class Cards {
 
 	@Id
-	@GeneratedValue(strategy= GenerationType.AUTO,generator="native")
-	@GenericGenerator(name = "native",strategy = "native")
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+	@GenericGenerator(name = "native", strategy = "native")
 	@Column(name = "card_id")
 	private int cardId;
 
@@ -99,5 +99,5 @@ public class Cards {
 	public void setCreateDt(Date createDt) {
 		this.createDt = createDt;
 	}
-	
+
 }

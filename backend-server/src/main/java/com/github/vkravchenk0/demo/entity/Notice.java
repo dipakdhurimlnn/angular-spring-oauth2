@@ -1,8 +1,9 @@
 package com.github.vkravchenk0.demo.entity;
 
-import java.sql.Date;
-
 import jakarta.persistence.*;
+
+import java.util.Date;
+
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
