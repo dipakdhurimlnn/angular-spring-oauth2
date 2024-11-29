@@ -1,5 +1,4 @@
 ## Spring Authorization Server example: Authorization server and Resource server combined in a single application.
-### Sample project to demonstrate the answer for the [stackoverflow question](https://stackoverflow.com/questions/70949390/spring-authorization-and-resource-on-same-server/70958977).   
 The code in the README uses the [HTTPie CLI](https://github.com/httpie/cli).  
 Swagger UI is available on http://localhost:8080/swagger-ui/index.html
 
