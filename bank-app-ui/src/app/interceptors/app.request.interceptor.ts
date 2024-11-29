@@ -17,7 +17,7 @@ export class XhrInterceptor implements HttpInterceptor {
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler) {
-        if (req.url.indexOf("oauth2/") < 0 && req.url.indexOf("logout") < 0) {
+        if (req.url.indexOf("oauth2/") < 0) {
             let httpHeaders = new HttpHeaders();
             if (sessionStorage.getItem('userdetails')) {
                 this.user = JSON.parse(sessionStorage.getItem('userdetails')!);
@@ -34,6 +34,23 @@ export class XhrInterceptor implements HttpInterceptor {
             // if (xsrf) {
             //     httpHeaders = httpHeaders.append('X-XSRF-TOKEN', xsrf);
             // }
+
+            httpHeaders = httpHeaders.append('X-Requested-With', 'XMLHttpRequest');
+            const xhr = req.clone({
+                headers: httpHeaders
+            });
+            return next.handle(xhr).pipe(tap(
+                (err: any) => {
+                    if (err instanceof HttpErrorResponse) {
+                        if (err.status !== 401) {
+                            return;
+                        }
+                        this.router.navigate(['dashboard']);
+                    }
+                }));
+        } else {
+            let httpHeaders = new HttpHeaders();
+            httpHeaders = httpHeaders.append('Authorization', 'Basic ' + window.btoa('oidc-client' + ':' + 'password'));
 
             httpHeaders = httpHeaders.append('X-Requested-With', 'XMLHttpRequest');
             const xhr = req.clone({

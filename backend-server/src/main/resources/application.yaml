@@ -12,6 +12,13 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  security:
+    oauth2:
+      resourceserver:
+        opaque-token:
+          introspection-uri: http://localhost:8080/oauth2/introspect
+          client-id: oidc-client      # Client ID for introspection
+          client-secret: password  # Client Secret for introspection
         
 springdoc:
   enable-spring-security: true
