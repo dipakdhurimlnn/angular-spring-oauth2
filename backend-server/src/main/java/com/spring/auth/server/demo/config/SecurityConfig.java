@@ -19,12 +19,10 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import com.spring.auth.server.demo.filter.SessionInvalidationFilter;
 import com.spring.auth.server.demo.repositoryImpl.CustomClientRegistrationRepositoryImpl;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -57,10 +55,8 @@ public class SecurityConfig {
 				return config;
 
 			}
-		})).addFilterAfter(new SessionInvalidationFilter(), CsrfFilter.class)
-				.exceptionHandling((exceptions) -> exceptions.defaultAuthenticationEntryPointFor(
-						new LoginUrlAuthenticationEntryPoint("/login"),
-						new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
+		})).exceptionHandling((exceptions) -> exceptions.defaultAuthenticationEntryPointFor(
+				new LoginUrlAuthenticationEntryPoint("/login"), new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
 				.oauth2ResourceServer((resourceServer) -> resourceServer.opaqueToken(Customizer.withDefaults()));
 
 		return http.build();
