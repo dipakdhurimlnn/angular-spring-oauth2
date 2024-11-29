@@ -79,9 +79,10 @@ public class SecurityConfig {
 	@Bean
 	@Order(3)
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests((authorize) -> authorize
-				.requestMatchers("/test/unprotected", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
-				.permitAll().anyRequest().authenticated()).formLogin(Customizer.withDefaults())
+		http.authorizeHttpRequests(
+				(authorize) -> authorize.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+						.permitAll().anyRequest().authenticated())
+				.formLogin(Customizer.withDefaults())
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessHandler(customLogoutSuccessHandler()))
 				.httpBasic(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable);
 

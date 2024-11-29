@@ -1,7 +1,5 @@
 package com.spring.auth.server.demo.entity;
 
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
