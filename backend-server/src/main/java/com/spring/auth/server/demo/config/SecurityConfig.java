@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
@@ -20,8 +19,6 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-
-import com.spring.auth.server.demo.repositoryImpl.CustomClientRegistrationRepositoryImpl;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -61,7 +58,7 @@ public class SecurityConfig {
 
 	@Bean
 	@Order(2)
-	public SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
+	SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
 		http.securityMatcher("/api/**")
 				.authorizeHttpRequests((authorize) -> authorize
 						.requestMatchers("/api/test/unprotected", "/api/notices", "/api/contact").permitAll()
@@ -87,12 +84,7 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public ClientRegistrationRepository clientRegistrationRepository() {
-		return new CustomClientRegistrationRepositoryImpl();
-	}
-
-	@Bean
-	public LogoutSuccessHandler customLogoutSuccessHandler() {
+	LogoutSuccessHandler customLogoutSuccessHandler() {
 		return (request, response, authentication) -> {
 			response.sendRedirect("http://localhost:4200");
 		};
