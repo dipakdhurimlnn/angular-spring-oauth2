@@ -1,7 +1,5 @@
 package com.spring.auth.server.demo.config;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -56,8 +54,7 @@ public class SecurityConfig {
 
 			}
 		})).exceptionHandling((exceptions) -> exceptions.defaultAuthenticationEntryPointFor(
-				new LoginUrlAuthenticationEntryPoint("/login"), new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
-				.oauth2ResourceServer((resourceServer) -> resourceServer.opaqueToken(Customizer.withDefaults()));
+				new LoginUrlAuthenticationEntryPoint("/login"), new MediaTypeRequestMatcher(MediaType.TEXT_HTML)));
 
 		return http.build();
 	}
@@ -67,8 +64,8 @@ public class SecurityConfig {
 	public SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
 		http.securityMatcher("/api/**")
 				.authorizeHttpRequests((authorize) -> authorize
-						.requestMatchers("/api/test/unprotected", "/api/login", "/api/notices", "/api/contact")
-						.permitAll().anyRequest().authenticated())
+						.requestMatchers("/api/test/unprotected", "/api/notices", "/api/contact").permitAll()
+						.anyRequest().authenticated())
 				.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.oauth2ResourceServer((resourceServer) -> resourceServer.opaqueToken(Customizer.withDefaults()))
 				.csrf(AbstractHttpConfigurer::disable);
