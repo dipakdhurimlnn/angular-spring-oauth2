@@ -12,6 +12,7 @@
 	<groupId>com.github.vkravchenk0</groupId>
 	<artifactId>authorization-server-demo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging> <!-- WAR Packaging Type -->
 	<name>authorization-server-demo</name>
 	<description>Demo project to show how to have both authorization and
 		resource endpoints in the single app</description>
