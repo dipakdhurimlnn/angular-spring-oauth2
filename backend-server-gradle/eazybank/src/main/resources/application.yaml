@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: eazybank
+  datasource:
+    url: jdbc:postgresql://localhost:5432/eazybank
+    username: postgres
+    password: saral001
+    driver-class-name : org.postgresql.Driver
+  jpa:
+    database-platform : org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  security:
+    oauth2:
+      resourceserver:
+        opaque-token:
+          introspection-uri: http://localhost:8080/oauth2/introspect
+          client-id: oidc-client      # Client ID for introspection
+          client-secret: password  # Client Secret for introspection
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB   
+springdoc:
+  enable-spring-security: true
+  show-login-endpoint: true
+  show-oauth2-endpoints: true
+  
+#logginglevel.org.springframework.security=DEBUG
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE
+  pattern:
+    console: "%file - %m%n"
+    
+  
+server:
+  tomcat:
+    max-post-size: 209715200  # 200 MB
+
+        
+        
