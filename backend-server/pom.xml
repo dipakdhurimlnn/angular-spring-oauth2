@@ -9,7 +9,7 @@
 		<version>3.2.1</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.github.vkravchenk0</groupId>
+	<groupId>com.auth.server.demo</groupId>
 	<artifactId>authorization-server-demo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging> <!-- WAR Packaging Type -->
