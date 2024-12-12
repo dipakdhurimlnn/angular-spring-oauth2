@@ -1,5 +1,7 @@
 package com.auth.demo.entity;
 
+import java.io.Serializable;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -13,7 +15,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "authorities")
-public class Authority implements GrantedAuthority {
+public class Authority implements GrantedAuthority, Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
 	@GenericGenerator(name = "native", strategy = "native")

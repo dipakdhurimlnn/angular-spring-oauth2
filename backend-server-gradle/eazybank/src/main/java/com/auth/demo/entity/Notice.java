@@ -2,13 +2,14 @@ package com.auth.demo.entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "notice_details")
-public class Notice {
+public class Notice implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")

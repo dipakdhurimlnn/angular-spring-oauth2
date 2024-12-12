@@ -1,5 +1,6 @@
 package com.auth.demo.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import jakarta.persistence.*;
@@ -7,7 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "cards")
-public class Cards {
+public class Cards implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")

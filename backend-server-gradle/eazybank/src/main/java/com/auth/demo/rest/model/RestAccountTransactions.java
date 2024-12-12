@@ -1,44 +1,39 @@
-package com.auth.demo.entity;
+package com.auth.demo.rest.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-import java.io.Serializable;
 import java.util.Date;
 
-@Entity
-@Table(name = "account_transactions")
-public class AccountTransactions implements Serializable {
+import com.auth.demo.entity.AccountTransactions;
 
-	@Id
-	@Column(name = "transaction_id")
+public class RestAccountTransactions {
 	private String transactionId;
 
-	@Column(name = "account_number")
 	private long accountNumber;
 
-	@Column(name = "customer_id")
 	private int customerId;
 
-	@Column(name = "transaction_dt")
 	private Date transactionDt;
 
-	@Column(name = "transaction_summary")
 	private String transactionSummary;
 
-	@Column(name = "transaction_type")
 	private String transactionType;
 
-	@Column(name = "transaction_amt")
 	private int transactionAmt;
 
-	@Column(name = "closing_balance")
 	private int closingBalance;
 
-	@Column(name = "create_dt")
 	private String createDt;
+
+	public RestAccountTransactions(AccountTransactions accountTnx) {
+		this.transactionId = accountTnx.getTransactionId();
+		this.accountNumber = accountTnx.getAccountNumber();
+		this.customerId = accountTnx.getCustomerId();
+		this.transactionDt = accountTnx.getTransactionDt();
+		this.transactionSummary = accountTnx.getTransactionSummary();
+		this.transactionType = accountTnx.getTransactionType();
+		this.transactionAmt = accountTnx.getTransactionAmt();
+		this.closingBalance = accountTnx.getClosingBalance();
+		this.createDt = accountTnx.getCreateDt();
+	}
 
 	public String getTransactionId() {
 		return transactionId;
