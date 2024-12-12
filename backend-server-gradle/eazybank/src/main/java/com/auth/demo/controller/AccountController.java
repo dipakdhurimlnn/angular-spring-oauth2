@@ -16,7 +16,9 @@ public class AccountController {
 
 	@GetMapping("/api/myAccount")
 	public Accounts getAccountDetails(@RequestParam int id) {
+		System.err.println(id);
 		Accounts accounts = accountsRepository.findByCustomerId(id);
+		System.err.println(accounts);
 		if (accounts != null) {
 			return accounts;
 		} else {
