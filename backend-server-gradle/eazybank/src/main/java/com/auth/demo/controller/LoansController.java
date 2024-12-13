@@ -19,7 +19,7 @@ public class LoansController {
 
 	@GetMapping("/api/myLoans")
 	@PostAuthorize("hasRole('USER')")
-	public List<Loans> getLoanDetails(@RequestParam int id) {
+	public List<Loans> getLoanDetails(@RequestParam("id") int id) {
 		List<Loans> loans = loanRepository.findByCustomerIdOrderByStartDtDesc(id);
 		if (loans != null) {
 			return loans;

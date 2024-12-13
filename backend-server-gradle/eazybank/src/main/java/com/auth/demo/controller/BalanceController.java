@@ -19,7 +19,7 @@ public class BalanceController {
 	private AccountTransactionsRepository accountTransactionsRepository;
 
 	@GetMapping("/api/myBalance")
-	public List<RestAccountTransactions> getBalanceDetails(@RequestParam(required = false) int id) {
+	public List<RestAccountTransactions> getBalanceDetails(@RequestParam("id") int id) {
 		System.err.println(id);
 		List<AccountTransactions> accountTransactions = accountTransactionsRepository
 				.findByCustomerIdOrderByTransactionDtDesc(id);
