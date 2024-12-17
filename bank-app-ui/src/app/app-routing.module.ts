@@ -12,6 +12,7 @@ import {CardsComponent} from './components/cards/cards.component';
 import {AuthActivateRouteGuard} from './routeguards/auth.routeguard';
 import {HomeComponent} from './components/home/home.component';
 import {AuthCallBackComponent} from "./components/auth-call-back/auth-call-back.component";
+import {environment} from "../environments/environment";
 
 const routes: Routes = [
     {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -30,11 +31,11 @@ const routes: Routes = [
     },
     {path: 'myLoans', component: LoansComponent, canActivate: [AuthActivateRouteGuard], data: {}},
     {path: 'myCards', component: CardsComponent, canActivate: [AuthActivateRouteGuard], data: {roles: ['USER']}},
-    {path: 'auth/callback', component: AuthCallBackComponent}
+    {path: 'auth-callback', component: AuthCallBackComponent}
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [RouterModule.forRoot(routes, {useHash: environment.production})],
     exports: [RouterModule]
 })
 export class AppRoutingModule {

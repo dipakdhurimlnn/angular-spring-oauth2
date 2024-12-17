@@ -16,6 +16,7 @@ export class AuthCallBackComponent implements OnInit {
 
     ngOnInit(): void {
         this.route.queryParams.subscribe(params => {
+            console.log(params)
             if (params['code']) {
 
                 const grant_type = "authorization_code";
