@@ -60,10 +60,8 @@ public class SecurityConfig {
 	@Bean
 	@Order(2)
 	SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
-		http.securityMatcher("/api/**")
-				.authorizeHttpRequests((authorize) -> authorize
-						.requestMatchers("/api/test/unprotected", "/api/notices", "/api/contact").permitAll()
-						.anyRequest().authenticated())
+		http.securityMatcher("/api/**").authorizeHttpRequests((authorize) -> authorize
+				.requestMatchers("/test/unprotected", "/notices", "/contact").permitAll().anyRequest().authenticated())
 				.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.oauth2ResourceServer((resourceServer) -> resourceServer.opaqueToken(Customizer.withDefaults()))
 				.csrf(AbstractHttpConfigurer::disable);
@@ -74,9 +72,14 @@ public class SecurityConfig {
 	@Bean
 	@Order(3)
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests((authorize) -> authorize.requestMatchers("/", "/index.html", "/static/**",
-				"/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll().anyRequest().authenticated())
-				.formLogin(Customizer.withDefaults())
+		http.authorizeHttpRequests((authorize) -> authorize
+				.requestMatchers("/", "/index.html", "/static/**", "/assets/**", "/favicon.ico", "/images/**", "/*.ttf", // Allow
+																															// in
+																															// subdirectories
+						"/*.woff", "/*.woff2", "/*.eot", "/*.svg", "/v3/api-docs/**", "/swagger-ui/**",
+						"/swagger-ui.html", "/*.js", "/*.css", // Root-level CSS and JS
+						"/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+				.permitAll().anyRequest().authenticated()).formLogin(Customizer.withDefaults())
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessHandler(customLogoutSuccessHandler()))
 				.httpBasic(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable);
 
@@ -86,7 +89,7 @@ public class SecurityConfig {
 	@Bean
 	LogoutSuccessHandler customLogoutSuccessHandler() {
 		return (request, response, authentication) -> {
-			response.sendRedirect("http://localhost:4200");
+			response.sendRedirect("http://localhost:8080");
 		};
 	}
 

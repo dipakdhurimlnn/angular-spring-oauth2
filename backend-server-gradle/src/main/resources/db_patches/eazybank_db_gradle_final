@@ -1,0 +1,768 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.1
+-- Dumped by pg_dump version 14.1
+
+-- Started on 2024-12-21 20:55:59
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 218 (class 1259 OID 57634)
+-- Name: account_transactions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.account_transactions (
+    transaction_id character varying(200) NOT NULL,
+    account_number integer NOT NULL,
+    customer_id integer NOT NULL,
+    transaction_dt date NOT NULL,
+    transaction_summary character varying(200) NOT NULL,
+    transaction_type character varying(100) NOT NULL,
+    transaction_amt integer NOT NULL,
+    closing_balance integer NOT NULL,
+    create_dt date
+);
+
+
+ALTER TABLE public.account_transactions OWNER TO postgres;
+
+--
+-- TOC entry 211 (class 1259 OID 57588)
+-- Name: accounts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.accounts (
+    customer_id integer NOT NULL,
+    account_number integer NOT NULL,
+    account_type character varying(100) NOT NULL,
+    branch_address character varying(200) NOT NULL,
+    create_dt date
+);
+
+
+ALTER TABLE public.accounts OWNER TO postgres;
+
+--
+-- TOC entry 217 (class 1259 OID 57623)
+-- Name: authorities; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.authorities (
+    id integer NOT NULL,
+    customer_id integer NOT NULL,
+    name character varying(50) NOT NULL
+);
+
+
+ALTER TABLE public.authorities OWNER TO postgres;
+
+--
+-- TOC entry 216 (class 1259 OID 57622)
+-- Name: authorities_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.authorities_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.authorities_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3410 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: authorities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.authorities_id_seq OWNED BY public.authorities.id;
+
+
+--
+-- TOC entry 215 (class 1259 OID 57611)
+-- Name: cards; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.cards (
+    card_id integer NOT NULL,
+    card_number character varying(100) NOT NULL,
+    customer_id integer NOT NULL,
+    card_type character varying(100) NOT NULL,
+    total_limit integer NOT NULL,
+    amount_used integer NOT NULL,
+    available_amount integer NOT NULL,
+    create_dt date
+);
+
+
+ALTER TABLE public.cards OWNER TO postgres;
+
+--
+-- TOC entry 214 (class 1259 OID 57610)
+-- Name: cards_card_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.cards_card_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.cards_card_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3411 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: cards_card_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.cards_card_id_seq OWNED BY public.cards.card_id;
+
+
+--
+-- TOC entry 219 (class 1259 OID 57651)
+-- Name: contact_messages; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.contact_messages (
+    contact_id character varying(50) NOT NULL,
+    contact_name character varying(50) NOT NULL,
+    contact_email character varying(100) NOT NULL,
+    subject character varying(500) NOT NULL,
+    message character varying(2000) NOT NULL,
+    create_dt date
+);
+
+
+ALTER TABLE public.contact_messages OWNER TO postgres;
+
+--
+-- TOC entry 210 (class 1259 OID 57580)
+-- Name: customer; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.customer (
+    customer_id integer NOT NULL,
+    name character varying(100) NOT NULL,
+    email character varying(100) NOT NULL,
+    mobile_number character varying(20) NOT NULL,
+    pwd character varying(500) NOT NULL,
+    role character varying(100) NOT NULL,
+    create_dt date
+);
+
+
+ALTER TABLE public.customer OWNER TO postgres;
+
+--
+-- TOC entry 209 (class 1259 OID 57579)
+-- Name: customer_customer_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.customer_customer_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.customer_customer_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3412 (class 0 OID 0)
+-- Dependencies: 209
+-- Name: customer_customer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.customer_customer_id_seq OWNED BY public.customer.customer_id;
+
+
+--
+-- TOC entry 213 (class 1259 OID 57599)
+-- Name: loans; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.loans (
+    loan_number integer NOT NULL,
+    customer_id integer NOT NULL,
+    start_dt date NOT NULL,
+    loan_type character varying(100) NOT NULL,
+    total_loan integer NOT NULL,
+    amount_paid integer NOT NULL,
+    outstanding_amount integer NOT NULL,
+    create_dt date
+);
+
+
+ALTER TABLE public.loans OWNER TO postgres;
+
+--
+-- TOC entry 212 (class 1259 OID 57598)
+-- Name: loans_loan_number_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.loans_loan_number_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.loans_loan_number_seq OWNER TO postgres;
+
+--
+-- TOC entry 3413 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: loans_loan_number_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.loans_loan_number_seq OWNED BY public.loans.loan_number;
+
+
+--
+-- TOC entry 221 (class 1259 OID 57659)
+-- Name: notice_details; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.notice_details (
+    notice_id integer NOT NULL,
+    notice_summary character varying(200) NOT NULL,
+    notice_details character varying(500) NOT NULL,
+    notic_beg_dt date NOT NULL,
+    notic_end_dt date NOT NULL,
+    create_dt date
+);
+
+
+ALTER TABLE public.notice_details OWNER TO postgres;
+
+--
+-- TOC entry 220 (class 1259 OID 57658)
+-- Name: notice_details_notice_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.notice_details_notice_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.notice_details_notice_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3414 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: notice_details_notice_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.notice_details_notice_id_seq OWNED BY public.notice_details.notice_id;
+
+
+--
+-- TOC entry 222 (class 1259 OID 57667)
+-- Name: oauth2_registered_client; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.oauth2_registered_client (
+    id character varying(255) NOT NULL,
+    client_id character varying(255) NOT NULL,
+    client_id_issued_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    client_secret character varying(255),
+    client_secret_expires_at timestamp without time zone,
+    client_name character varying(255) NOT NULL,
+    client_authentication_methods character varying(1000) NOT NULL,
+    authorization_grant_types character varying(1000) NOT NULL,
+    redirect_uris character varying(1000),
+    scopes character varying(1000) NOT NULL,
+    client_settings character varying(2000) NOT NULL,
+    token_settings character varying(2000) NOT NULL
+);
+
+
+ALTER TABLE public.oauth2_registered_client OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 57883)
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    username character varying(200) NOT NULL,
+    password character varying(500) NOT NULL,
+    enabled boolean NOT NULL
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- TOC entry 225 (class 1259 OID 57902)
+-- Name: users_custom_info; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users_custom_info (
+    username character varying(200) NOT NULL,
+    test character varying(500) NOT NULL
+);
+
+
+ALTER TABLE public.users_custom_info OWNER TO postgres;
+
+--
+-- TOC entry 224 (class 1259 OID 57890)
+-- Name: usersinfo; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.usersinfo (
+    username character varying(200) NOT NULL,
+    isaccountnonexpired boolean NOT NULL,
+    isaccountnonlocked boolean NOT NULL,
+    iscredentialsnonexpired boolean NOT NULL,
+    securityquestion character varying(200) NOT NULL,
+    securityanswer character varying(200) NOT NULL,
+    mfasecret character varying(200) NOT NULL,
+    mfakeyid character varying(200) NOT NULL,
+    mfaenabled boolean NOT NULL,
+    mfaregistered boolean NOT NULL,
+    securityquestionenabled boolean NOT NULL
+);
+
+
+ALTER TABLE public.usersinfo OWNER TO postgres;
+
+--
+-- TOC entry 3215 (class 2604 OID 57626)
+-- Name: authorities id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.authorities ALTER COLUMN id SET DEFAULT nextval('public.authorities_id_seq'::regclass);
+
+
+--
+-- TOC entry 3214 (class 2604 OID 57614)
+-- Name: cards card_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.cards ALTER COLUMN card_id SET DEFAULT nextval('public.cards_card_id_seq'::regclass);
+
+
+--
+-- TOC entry 3212 (class 2604 OID 57583)
+-- Name: customer customer_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.customer ALTER COLUMN customer_id SET DEFAULT nextval('public.customer_customer_id_seq'::regclass);
+
+
+--
+-- TOC entry 3213 (class 2604 OID 57602)
+-- Name: loans loan_number; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.loans ALTER COLUMN loan_number SET DEFAULT nextval('public.loans_loan_number_seq'::regclass);
+
+
+--
+-- TOC entry 3216 (class 2604 OID 57662)
+-- Name: notice_details notice_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.notice_details ALTER COLUMN notice_id SET DEFAULT nextval('public.notice_details_notice_id_seq'::regclass);
+
+
+--
+-- TOC entry 3397 (class 0 OID 57634)
+-- Dependencies: 218
+-- Data for Name: account_transactions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.account_transactions (transaction_id, account_number, customer_id, transaction_dt, transaction_summary, transaction_type, transaction_amt, closing_balance, create_dt) FROM stdin;
+200b5685-18e7-11ef-ba5a-0242ac110002	1865764534	1	2024-05-16	Coffee Shop	Withdrawal	30	34500	2024-05-16
+2014353c-18e7-11ef-ba5a-0242ac110002	1865764534	1	2024-05-17	Uber	Withdrawal	100	34400	2024-05-17
+201d609b-18e7-11ef-ba5a-0242ac110002	1865764534	1	2024-05-18	Self Deposit	Deposit	500	34900	2024-05-18
+20236fc8-18e7-11ef-ba5a-0242ac110002	1865764534	1	2024-05-19	Ebay	Withdrawal	600	34300	2024-05-19
+2028052f-18e7-11ef-ba5a-0242ac110002	1865764534	1	2024-05-21	OnlineTransfer	Deposit	700	35000	2024-05-21
+202fa532-18e7-11ef-ba5a-0242ac110002	1865764534	1	2024-05-22	Amazon.com	Withdrawal	100	34900	2024-05-22
+\.
+
+
+--
+-- TOC entry 3390 (class 0 OID 57588)
+-- Dependencies: 211
+-- Data for Name: accounts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.accounts (customer_id, account_number, account_type, branch_address, create_dt) FROM stdin;
+1	1865764534	Savings	123 Main Street, New York	2024-05-23
+\.
+
+
+--
+-- TOC entry 3396 (class 0 OID 57623)
+-- Dependencies: 217
+-- Data for Name: authorities; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.authorities (id, customer_id, name) FROM stdin;
+1	1	ROLE_USER
+2	1	ROLE_ADMIN
+\.
+
+
+--
+-- TOC entry 3394 (class 0 OID 57611)
+-- Dependencies: 215
+-- Data for Name: cards; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.cards (card_id, card_number, customer_id, card_type, total_limit, amount_used, available_amount, create_dt) FROM stdin;
+1	4565XXXX4656	1	Credit	10000	500	9500	2024-05-23
+2	3455XXXX8673	1	Credit	7500	600	6900	2024-05-23
+3	2359XXXX9346	1	Credit	20000	4000	16000	2024-05-23
+\.
+
+
+--
+-- TOC entry 3398 (class 0 OID 57651)
+-- Dependencies: 219
+-- Data for Name: contact_messages; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.contact_messages (contact_id, contact_name, contact_email, subject, message, create_dt) FROM stdin;
+SR15519149	sfsaas	assads@gmai.com	asd	asdsa	2024-06-18
+SR361436921	sfsaas	assads@remail.com	asfsasadsa	sdfsada	2024-08-19
+SR699554793	Teste	sfsadsa@afafa.com	fafaf	asdad	2024-06-18
+SR788581048	asfasdsa	asdsad@wrafa.com	asdsaddsfaf	assaas	2024-06-18
+SR818795927	Test	zfafafa@fafaf.com	asfsaasf	safsafsafsa	2024-06-18
+\.
+
+
+--
+-- TOC entry 3389 (class 0 OID 57580)
+-- Dependencies: 210
+-- Data for Name: customer; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.customer (customer_id, name, email, mobile_number, pwd, role, create_dt) FROM stdin;
+1	Happy	happy@example.com	9876548337	$2y$12$oRRbkNfwuR8ug4MlzH5FOeui.//1mkd.RsOAJMbykTSupVy.x/vb2	admin	2024-05-23
+2	John Doe	john@example.com	456747484	$2y$12$oRRbkNfwuR8ug4MlzH5FOeui.//1mkd.RsOAJMbykTSupVy.x/vb2	user	2024-05-24
+\.
+
+
+--
+-- TOC entry 3392 (class 0 OID 57599)
+-- Dependencies: 213
+-- Data for Name: loans; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.loans (loan_number, customer_id, start_dt, loan_type, total_loan, amount_paid, outstanding_amount, create_dt) FROM stdin;
+1	1	2020-10-13	Home	200000	50000	150000	2020-10-13
+2	1	2020-06-06	Vehicle	40000	10000	30000	2020-06-06
+3	1	2018-02-14	Home	50000	10000	40000	2018-02-14
+4	1	2018-02-14	Personal	10000	3500	6500	2018-02-14
+\.
+
+
+--
+-- TOC entry 3400 (class 0 OID 57659)
+-- Dependencies: 221
+-- Data for Name: notice_details; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.notice_details (notice_id, notice_summary, notice_details, notic_beg_dt, notic_end_dt, create_dt) FROM stdin;
+1	Welcome	Welcome to EazyBank	2024-08-21	2025-08-21	2024-08-21
+\.
+
+
+--
+-- TOC entry 3401 (class 0 OID 57667)
+-- Dependencies: 222
+-- Data for Name: oauth2_registered_client; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.oauth2_registered_client (id, client_id, client_id_issued_at, client_secret, client_secret_expires_at, client_name, client_authentication_methods, authorization_grant_types, redirect_uris, scopes, client_settings, token_settings) FROM stdin;
+1	oidc-client	2024-08-09 08:33:46	$2a$10$gqwXtRsO8JStQpT1gV2SYOC8IEHREA6lWs/KoHGeVGIqO6CaURVda	\N	OIDC Client	client_secret_basic	authorization_code	http://localhost:8080/	openid	{"requireAuthorizationConsent":false,"requireProofKey":true}	{"accessTokenFormat":"REFERENCE",\n"accessTokenTimeToLive":"PT30M",\n"refreshTokenTimeToLive":"P30D",\n"reuseRefreshTokens":true}
+\.
+
+
+--
+-- TOC entry 3402 (class 0 OID 57883)
+-- Dependencies: 223
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.users (username, password, enabled) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3404 (class 0 OID 57902)
+-- Dependencies: 225
+-- Data for Name: users_custom_info; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.users_custom_info (username, test) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3403 (class 0 OID 57890)
+-- Dependencies: 224
+-- Data for Name: usersinfo; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.usersinfo (username, isaccountnonexpired, isaccountnonlocked, iscredentialsnonexpired, securityquestion, securityanswer, mfasecret, mfakeyid, mfaenabled, mfaregistered, securityquestionenabled) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3415 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: authorities_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.authorities_id_seq', 2, true);
+
+
+--
+-- TOC entry 3416 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.cards_card_id_seq', 3, true);
+
+
+--
+-- TOC entry 3417 (class 0 OID 0)
+-- Dependencies: 209
+-- Name: customer_customer_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.customer_customer_id_seq', 2, true);
+
+
+--
+-- TOC entry 3418 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: loans_loan_number_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.loans_loan_number_seq', 4, true);
+
+
+--
+-- TOC entry 3419 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: notice_details_notice_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.notice_details_notice_id_seq', 1, true);
+
+
+--
+-- TOC entry 3229 (class 2606 OID 57640)
+-- Name: account_transactions account_transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.account_transactions
+    ADD CONSTRAINT account_transactions_pkey PRIMARY KEY (transaction_id);
+
+
+--
+-- TOC entry 3221 (class 2606 OID 57592)
+-- Name: accounts accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT accounts_pkey PRIMARY KEY (account_number);
+
+
+--
+-- TOC entry 3227 (class 2606 OID 57628)
+-- Name: authorities authorities_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.authorities
+    ADD CONSTRAINT authorities_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3225 (class 2606 OID 57616)
+-- Name: cards cards_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.cards
+    ADD CONSTRAINT cards_pkey PRIMARY KEY (card_id);
+
+
+--
+-- TOC entry 3231 (class 2606 OID 57657)
+-- Name: contact_messages contact_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.contact_messages
+    ADD CONSTRAINT contact_messages_pkey PRIMARY KEY (contact_id);
+
+
+--
+-- TOC entry 3219 (class 2606 OID 57587)
+-- Name: customer customer_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.customer
+    ADD CONSTRAINT customer_pkey PRIMARY KEY (customer_id);
+
+
+--
+-- TOC entry 3223 (class 2606 OID 57604)
+-- Name: loans loans_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.loans
+    ADD CONSTRAINT loans_pkey PRIMARY KEY (loan_number);
+
+
+--
+-- TOC entry 3233 (class 2606 OID 57666)
+-- Name: notice_details notice_details_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.notice_details
+    ADD CONSTRAINT notice_details_pkey PRIMARY KEY (notice_id);
+
+
+--
+-- TOC entry 3235 (class 2606 OID 57674)
+-- Name: oauth2_registered_client oauth2_registered_client_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.oauth2_registered_client
+    ADD CONSTRAINT oauth2_registered_client_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3241 (class 2606 OID 57908)
+-- Name: users_custom_info users_custom_info_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users_custom_info
+    ADD CONSTRAINT users_custom_info_pkey PRIMARY KEY (username);
+
+
+--
+-- TOC entry 3237 (class 2606 OID 57889)
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (username);
+
+
+--
+-- TOC entry 3239 (class 2606 OID 57896)
+-- Name: usersinfo usersinfo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usersinfo
+    ADD CONSTRAINT usersinfo_pkey PRIMARY KEY (username);
+
+
+--
+-- TOC entry 3246 (class 2606 OID 57641)
+-- Name: account_transactions account_transactions_account_number_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.account_transactions
+    ADD CONSTRAINT account_transactions_account_number_fkey FOREIGN KEY (account_number) REFERENCES public.accounts(account_number) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 3247 (class 2606 OID 57646)
+-- Name: account_transactions account_transactions_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.account_transactions
+    ADD CONSTRAINT account_transactions_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES public.customer(customer_id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 3242 (class 2606 OID 57593)
+-- Name: accounts accounts_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT accounts_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES public.customer(customer_id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 3245 (class 2606 OID 57629)
+-- Name: authorities authorities_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.authorities
+    ADD CONSTRAINT authorities_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES public.customer(customer_id);
+
+
+--
+-- TOC entry 3244 (class 2606 OID 57617)
+-- Name: cards cards_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.cards
+    ADD CONSTRAINT cards_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES public.customer(customer_id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 3248 (class 2606 OID 57897)
+-- Name: usersinfo fk_usersinfo_users; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usersinfo
+    ADD CONSTRAINT fk_usersinfo_users FOREIGN KEY (username) REFERENCES public.users(username);
+
+
+--
+-- TOC entry 3243 (class 2606 OID 57605)
+-- Name: loans loans_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.loans
+    ADD CONSTRAINT loans_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES public.customer(customer_id) ON DELETE CASCADE;
+
+
+-- Completed on 2024-12-21 20:56:01
+
+--
+-- PostgreSQL database dump complete
+--
+
