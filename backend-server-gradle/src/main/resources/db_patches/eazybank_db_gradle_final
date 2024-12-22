@@ -257,6 +257,7 @@ CREATE TABLE public.notice_details (
     notic_beg_dt date NOT NULL,
     notic_end_dt date NOT NULL,
     create_dt date
+    update_dt date
 );
 
 

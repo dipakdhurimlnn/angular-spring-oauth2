@@ -15,7 +15,7 @@ import {AuthCallBackComponent} from "./components/auth-call-back/auth-call-back.
 import {environment} from "../environments/environment";
 
 const routes: Routes = [
-    {path: '', redirectTo: '/home', pathMatch: 'full'},
+    {path: '', component: HomeComponent},
     {path: 'home', component: HomeComponent},
     {path: 'login', component: LoginComponent},
     {path: 'contact', component: ContactComponent},
@@ -31,11 +31,11 @@ const routes: Routes = [
     },
     {path: 'myLoans', component: LoansComponent, canActivate: [AuthActivateRouteGuard], data: {}},
     {path: 'myCards', component: CardsComponent, canActivate: [AuthActivateRouteGuard], data: {roles: ['USER']}},
-    {path: 'auth-callback', component: AuthCallBackComponent}
+    {path: 'authCallback', component: AuthCallBackComponent}
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes, {useHash: environment.production})],
+    imports: [RouterModule.forRoot(routes, {useHash: false})],
     exports: [RouterModule]
 })
 export class AppRoutingModule {

@@ -10,7 +10,6 @@ import com.auth.demo.entity.Loans;
 @Repository
 public interface LoanRepository extends CrudRepository<Loans, Integer> {
 
-	// @PreAuthorize("hasRole('USER')")
 	List<Loans> findByCustomerIdOrderByStartDtDesc(int customerId);
 
 }

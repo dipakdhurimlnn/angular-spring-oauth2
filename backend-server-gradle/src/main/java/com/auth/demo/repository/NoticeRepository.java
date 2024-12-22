@@ -11,7 +11,7 @@ import com.auth.demo.entity.Notice;
 @Repository
 public interface NoticeRepository extends CrudRepository<Notice, Integer> {
 
-	@Query(nativeQuery = true, value = "SELECT n FROM Notice n WHERE CURRENT_DATE BETWEEN n.notic_beg_dt AND n.notic_end_dt")
+	@Query(nativeQuery = true, value = "SELECT * FROM notice_details n WHERE CURRENT_DATE BETWEEN n.notic_beg_dt AND n.notic_end_dt")
 	List<Notice> findAllActiveNotices();
 
 }

@@ -60,8 +60,10 @@ public class SecurityConfig {
 	@Bean
 	@Order(2)
 	SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
-		http.securityMatcher("/api/**").authorizeHttpRequests((authorize) -> authorize
-				.requestMatchers("/test/unprotected", "/notices", "/contact").permitAll().anyRequest().authenticated())
+		http.securityMatcher("/api/**")
+				.authorizeHttpRequests((authorize) -> authorize
+						.requestMatchers("/api/test/unprotected", "/api/notices", "/api/contact").permitAll()
+						.anyRequest().authenticated())
 				.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.oauth2ResourceServer((resourceServer) -> resourceServer.opaqueToken(Customizer.withDefaults()))
 				.csrf(AbstractHttpConfigurer::disable);
