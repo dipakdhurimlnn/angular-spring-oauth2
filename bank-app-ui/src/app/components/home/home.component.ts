@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {TokenOb} from "../../model/token.model";
 import {environment} from "../../../environments/environment";
 import {AppConstants} from "../../constants/app.constants";
+import {LoginService} from "../../services/login/login.service";
 
 @Component({
     selector: 'app-home',
@@ -12,7 +13,7 @@ import {AppConstants} from "../../constants/app.constants";
 })
 export class HomeComponent implements OnInit {
 
-    constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient) {
+    constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, public loginService: LoginService) {
     }
 
     ngOnInit(): void {
@@ -22,7 +23,7 @@ export class HomeComponent implements OnInit {
 
                 const grant_type = "authorization_code";
                 const client_id = "oidc-client"
-                const CODE_VERIFIER = "KImxEAikOHgWrAGTgbF3YXnAZ3RBy_1Oijcenvpi3Z_oL2Kfk0vxIhKhmxSZW4IHQhTyB7Rh1_07E1u6RJFw_2G41f9NyP4mMR4BRAhRgBKRDuYbXIIYTwkfoZs_YfDL";
+                const CODE_VERIFIER = this.loginService.getCodeVerifier();
                 const payloadOb = new FormData();
                 payloadOb.append("code", params['code']);
                 payloadOb.append("grant_type", grant_type);
@@ -33,6 +34,8 @@ export class HomeComponent implements OnInit {
                         if (res) {
                             if (res.access_token) {
                                 window.sessionStorage.setItem("accessToken", res['access_token']);
+                                sessionStorage.removeItem('code_challenge');
+                                sessionStorage.removeItem('code_verifier');
                                 this.router.navigate(['/dashboard']);
                             }
                         }

@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from "src/app/model/user.model";
+import {LoginService} from "../../services/login/login.service";
 
 
 @Component({
@@ -10,7 +11,7 @@ import {User} from "src/app/model/user.model";
 export class LoginComponent implements OnInit {
     model = new User();
 
-    constructor() {
+    constructor(public loginService: LoginService) {
 
     }
 
@@ -19,10 +20,13 @@ export class LoginComponent implements OnInit {
     }
 
     validateUser() {
+        if (!sessionStorage.getItem('code_challenge') || !sessionStorage.getItem('code_verifier')) {
+            this.loginService.generatePkcePair();
+        }
         const response_type = "code";
         const client_id = "oidc-client"
-        const code_challenge = "tpv22FEqJbXNrge_mtAYpNP2gTTm7WF8cPrVI8gpNBY";
-        const code_challenge_method = "S256"
+        const code_challenge = this.loginService.getCodeChallenge();
+        const code_challenge_method = this.loginService.getCodeChallengeMethod();
         const authObject = {
             response_type: response_type,
             client_id: client_id,
