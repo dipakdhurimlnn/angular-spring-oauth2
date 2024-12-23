@@ -91,7 +91,7 @@ public class SecurityConfig {
 	@Bean
 	LogoutSuccessHandler customLogoutSuccessHandler() {
 		return (request, response, authentication) -> {
-			response.sendRedirect("http://localhost:4200");
+			response.sendRedirect("http://localhost:8080");
 		};
 	}
 
