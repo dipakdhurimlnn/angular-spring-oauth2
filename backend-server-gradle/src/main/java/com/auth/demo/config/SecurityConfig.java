@@ -1,5 +1,6 @@
 package com.auth.demo.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -25,6 +26,9 @@ import jakarta.servlet.http.HttpServletRequest;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+	@Value("${base_url}")
+	private String baseUrl;
 
 	@Bean
 	PasswordEncoder passwordEncoder() {
@@ -90,7 +94,7 @@ public class SecurityConfig {
 	@Bean
 	LogoutSuccessHandler customLogoutSuccessHandler() {
 		return (request, response, authentication) -> {
-			response.sendRedirect("http://localhost:4200");
+			response.sendRedirect(baseUrl);
 		};
 	}
 
