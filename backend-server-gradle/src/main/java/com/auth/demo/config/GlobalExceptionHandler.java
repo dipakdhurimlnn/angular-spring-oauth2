@@ -9,7 +9,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(NoResourceFoundException.class)
 	public String handleNotFound(NoResourceFoundException ex) {
-		System.err.println("NoResourceFoundException");
-		return "/";
+		System.err.println("handleNotFound");
+		return "redirect:http://localhost:4200/login";
 	}
 }

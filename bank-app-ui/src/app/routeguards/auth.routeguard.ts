@@ -22,6 +22,7 @@ export class AuthActivateRouteGuard implements CanActivate {
         } else if (sessionStorage.getItem('accessToken')) {
             return this.getCurrentUser();
         } else {
+            this.router.navigate(['login']);
             return of(false);
         }
     }

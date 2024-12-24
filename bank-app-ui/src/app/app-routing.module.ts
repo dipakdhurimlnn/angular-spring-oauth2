@@ -30,7 +30,8 @@ const routes: Routes = [
     },
     {path: 'myLoans', component: LoansComponent, canActivate: [AuthActivateRouteGuard], data: {}},
     {path: 'myCards', component: CardsComponent, canActivate: [AuthActivateRouteGuard], data: {roles: ['USER']}},
-    {path: 'authCallback', component: AuthCallBackComponent}
+    {path: 'authCallback', component: AuthCallBackComponent},
+    {path: '**', redirectTo: 'dashboard', pathMatch: "full"},
 ];
 
 @NgModule({
