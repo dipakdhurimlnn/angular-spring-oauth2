@@ -12,7 +12,6 @@ import {CardsComponent} from './components/cards/cards.component';
 import {AuthActivateRouteGuard} from './routeguards/auth.routeguard';
 import {HomeComponent} from './components/home/home.component';
 import {AuthCallBackComponent} from "./components/auth-call-back/auth-call-back.component";
-import {environment} from "../environments/environment";
 
 const routes: Routes = [
     {path: '', component: HomeComponent},
